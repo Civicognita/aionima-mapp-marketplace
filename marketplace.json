@@ -1,0 +1,178 @@
+{
+  "name": "aionima-mapp-marketplace",
+  "owner": {
+    "name": "Civicognita",
+    "id": "#O0"
+  },
+  "mapps": [
+    {
+      "id": "admin-editor",
+      "name": "Admin Editor",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Document editor for administration projects — policies, procedures, templates, and reports",
+      "icon": "📝",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration"
+      ],
+      "source": "./mapps/civicognita/admin-editor.json"
+    },
+    {
+      "id": "code-browser",
+      "name": "Code Browser",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Source code viewer for dev projects — syntax-highlighted file browser with search",
+      "icon": "💻",
+      "category": "viewer",
+      "projectTypes": [],
+      "projectCategories": [
+        "app",
+        "web",
+        "monorepo"
+      ],
+      "source": "./mapps/civicognita/code-browser.json"
+    },
+    {
+      "id": "dashboard-viewer",
+      "name": "Dashboard Viewer",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Overview dashboard for administration and ops projects — status panels, log streams, and metric widgets",
+      "icon": "📊",
+      "category": "viewer",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/dashboard-viewer.json"
+    },
+    {
+      "id": "dev-workbench",
+      "name": "Dev Workbench",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Integrated development environment for code projects — editor, terminal, and build tools",
+      "icon": "⚙️",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "app",
+        "web",
+        "monorepo"
+      ],
+      "source": "./mapps/civicognita/dev-workbench.json"
+    },
+    {
+      "id": "gallery",
+      "name": "Gallery",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Media gallery for art projects — responsive grid with lightbox viewer",
+      "icon": "🖼️",
+      "category": "viewer",
+      "projectTypes": [
+        "art"
+      ],
+      "projectCategories": [
+        "media"
+      ],
+      "source": "./mapps/civicognita/gallery.json"
+    },
+    {
+      "id": "media-studio",
+      "name": "Media Studio",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Media production workspace — batch processing, format conversion, and metadata management for images and video",
+      "icon": "🎬",
+      "category": "production",
+      "projectTypes": [
+        "art"
+      ],
+      "projectCategories": [
+        "media"
+      ],
+      "source": "./mapps/civicognita/media-studio.json"
+    },
+    {
+      "id": "mind-mapper",
+      "name": "Mind Mapper",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Visual mind-mapping for writers — organize plots, characters, world-building, and story arcs",
+      "icon": "🧠",
+      "category": "production",
+      "projectTypes": [
+        "writing"
+      ],
+      "projectCategories": [
+        "literature"
+      ],
+      "source": "./mapps/civicognita/mind-mapper.json"
+    },
+    {
+      "id": "ops-monitor",
+      "name": "Ops Monitor",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Operations health check tool — service status, log analysis, and resource monitoring for infrastructure projects",
+      "icon": "🛡️",
+      "category": "tool",
+      "projectTypes": [],
+      "projectCategories": [
+        "ops"
+      ],
+      "source": "./mapps/civicognita/ops-monitor.json"
+    },
+    {
+      "id": "project-analyzer",
+      "name": "Project Analyzer",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Code analysis tool — dependency audit, complexity metrics, and architecture overview for dev projects",
+      "icon": "🔍",
+      "category": "tool",
+      "projectTypes": [],
+      "projectCategories": [
+        "app",
+        "web",
+        "monorepo"
+      ],
+      "source": "./mapps/civicognita/project-analyzer.json"
+    },
+    {
+      "id": "reader",
+      "name": "Reader",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "E-reader for literature projects — book-style layout with markdown rendering and dark mode",
+      "icon": "📖",
+      "category": "viewer",
+      "projectTypes": [
+        "writing"
+      ],
+      "projectCategories": [
+        "literature"
+      ],
+      "source": "./mapps/civicognita/reader.json"
+    },
+    {
+      "id": "runbook-editor",
+      "name": "Runbook Editor",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Create and manage operational runbooks — step-by-step procedures, incident playbooks, and automation scripts",
+      "icon": "📓",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "ops"
+      ],
+      "source": "./mapps/civicognita/runbook-editor.json"
+    }
+  ]
+}
