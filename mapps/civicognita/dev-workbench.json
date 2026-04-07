@@ -27,7 +27,7 @@
   "panel": {
     "label": "Workbench",
     "widgets": [
-      { "type": "markdown", "content": "## Dev Workbench\n\nIDE-style development environment with file tree navigation (TreeNav) and code editor (fancy-code). Browse your project files and edit them with syntax highlighting.\n\n**Built-in languages:** JavaScript, TypeScript, HTML, PHP" },
+      { "type": "tree-nav", "title": "Project Files" },
       { "type": "code-editor", "language": "typescript", "defaultValue": "// Select a file from the project tree to start editing\n", "height": "400" }
     ]
   },
