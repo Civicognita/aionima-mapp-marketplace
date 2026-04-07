@@ -3,8 +3,8 @@
   "id": "dev-workbench",
   "name": "Dev Workbench",
   "author": "civicognita",
-  "version": "1.0.0",
-  "description": "Integrated development environment for code projects — editor, terminal, and build tools",
+  "version": "1.1.0",
+  "description": "Integrated development environment for code projects — CodeMirror 6 editor, terminal, and build tools",
   "icon": "⚙️",
   "license": "proprietary",
   "category": "production",
@@ -27,7 +27,8 @@
   "panel": {
     "label": "Workbench",
     "widgets": [
-      { "type": "markdown", "content": "## Dev Workbench\n\nFull development environment for your project.\n\n- **File editor** with syntax highlighting\n- **Terminal** for running commands\n- **Build tools** integrated with project stack\n- **Live preview** for web projects\n\nAll changes are written directly to your project directory." }
+      { "type": "markdown", "content": "## Dev Workbench\n\nFull development environment for your project. Edit source files with syntax highlighting, run builds, and execute tests — all from the dashboard." },
+      { "type": "code-editor", "language": "typescript", "defaultValue": "// Open a file from the project tree to start editing\n", "height": "400px" }
     ]
   },
   "prompts": [
