@@ -1,0 +1,42 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "reader",
+  "name": "Reader",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "E-reader for literature projects — book-style layout with markdown rendering and dark mode",
+  "icon": "📖",
+  "license": "proprietary",
+  "category": "viewer",
+  "projectTypes": ["writing"],
+  "projectCategories": ["literature"],
+  "permissions": [
+    { "id": "container.run", "reason": "Serves content via nginx container", "required": true },
+    { "id": "fs.read", "reason": "Reads project files for rendering", "required": true }
+  ],
+  "container": {
+    "image": "nginx:alpine",
+    "internalPort": 80,
+    "volumeMounts": [
+      "{projectPath}/_proofed:/usr/share/nginx/html/content:ro,Z",
+      "{projectPath}/_wip:/usr/share/nginx/html/drafts:ro,Z"
+    ]
+  },
+  "panel": {
+    "label": "Reader",
+    "widgets": [
+      { "type": "markdown", "content": "## Reader\n\nYour project files are served at the project's `*.ai.on` URL as a book-style e-reader.\n\n### Supported formats\n- **Markdown:** `.md` files rendered with full formatting\n- **Text:** `.txt` files displayed as plain text\n- **reStructuredText:** `.rst` files\n\nOrganize content in `_proofed/` for the published reader view, or `_wip/` for drafts." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "reader.writing-assistant",
+      "label": "Writing Assistant",
+      "description": "AI assistance for writing and editing prose",
+      "systemPrompt": "This is a literature project. Help the user with writing, editing, and organizing their manuscripts. The project contains text files (.md, .txt) served as a book via the Reader app."
+    }
+  ],
+  "tools": [
+    { "id": "word-count", "label": "Word Count", "description": "Count words across all documents", "action": "shell", "command": "find . -name '*.md' -o -name '*.txt' | xargs wc -w 2>/dev/null || echo '0 total'" }
+  ]
+}

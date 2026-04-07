@@ -1,0 +1,35 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "admin-editor",
+  "name": "Admin Editor",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Document editor for administration projects — policies, procedures, templates, and reports",
+  "icon": "📝",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["administration"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads existing documents and templates", "required": true },
+    { "id": "fs.write", "reason": "Saves edited documents", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted document drafting", "required": false }
+  ],
+  "panel": {
+    "label": "Admin Editor",
+    "widgets": [
+      { "type": "markdown", "content": "## Admin Editor\n\nCreate and manage administrative documents.\n\n- **Policies & procedures** with version tracking\n- **Templates** for recurring documents\n- **Reports** with AI-assisted drafting\n- **Document index** for quick navigation\n\nDocuments are organized by type in your project directory." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "admin-editor.doc-assistant",
+      "label": "Document Assistant",
+      "description": "AI assistance for drafting administrative documents",
+      "systemPrompt": "This is an administration project. Help the user draft, edit, and organize administrative documents such as policies, procedures, meeting notes, and reports. Use clear, professional language."
+    }
+  ],
+  "tools": [
+    { "id": "doc-index", "label": "Document Index", "description": "List all documents in the project", "action": "shell", "command": "find . -type f \\( -name '*.md' -o -name '*.txt' -o -name '*.pdf' \\) | sort" }
+  ]
+}

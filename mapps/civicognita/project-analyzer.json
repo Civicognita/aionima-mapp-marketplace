@@ -1,0 +1,56 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "project-analyzer",
+  "name": "Project Analyzer",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Code analysis tool — dependency audit, complexity metrics, and architecture overview for dev projects",
+  "icon": "🔍",
+  "license": "proprietary",
+  "category": "tool",
+  "projectTypes": [],
+  "projectCategories": ["app", "web", "monorepo"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads source files for analysis", "required": true },
+    { "id": "agent.prompt", "reason": "AI-powered code analysis and recommendations", "required": false }
+  ],
+  "panel": {
+    "label": "Analyzer",
+    "widgets": [
+      { "type": "markdown", "content": "## Project Analyzer\n\nAnalyze your codebase for quality and structure.\n\n- **Dependency audit** — outdated, unused, or vulnerable packages\n- **Complexity metrics** — cyclomatic complexity per file\n- **Architecture overview** — module dependency graph\n- **Tech debt** — AI-assisted identification of improvement areas" }
+    ]
+  },
+  "pages": [
+    {
+      "key": "analysis",
+      "title": "Analysis Options",
+      "pageType": "standard",
+      "visibility": "always",
+      "fields": [
+        {
+          "key": "scope",
+          "cell": "A1",
+          "type": "select",
+          "label": "Analysis scope",
+          "required": true,
+          "options": ["Full project", "Source code only", "Dependencies only", "Architecture only"]
+        },
+        {
+          "key": "notes",
+          "cell": "A2",
+          "type": "textarea",
+          "label": "Specific areas of concern",
+          "required": false,
+          "placeholder": "Any particular files, patterns, or issues you want examined..."
+        }
+      ]
+    }
+  ],
+  "output": {
+    "processingPrompt": "You are a senior software architect performing a code review. Analyze the project based on the requested scope (A1) and any specific concerns (A2).\n\nProduce a structured report:\n\n## Project Analysis Report\n\n### Overview\nBrief summary of the project structure and tech stack.\n\n### Findings\nKey observations organized by severity (critical, warning, info).\n\n### Recommendations\nActionable improvements prioritized by impact.\n\n### Metrics\nRelevant numbers (file count, dependency count, etc.)."
+  },
+  "tools": [
+    { "id": "dep-check", "label": "Check Dependencies", "description": "List outdated dependencies", "action": "shell", "command": "npm outdated 2>/dev/null || pnpm outdated 2>/dev/null || echo 'No package manager detected'" },
+    { "id": "file-stats", "label": "File Stats", "description": "Show file type distribution", "action": "shell", "command": "find . -type f -not -path '*/node_modules/*' -not -path '*/.git/*' | sed 's/.*\\.//' | sort | uniq -c | sort -rn | head -20" }
+  ]
+}

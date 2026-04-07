@@ -1,0 +1,41 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "gallery",
+  "name": "Gallery",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Media gallery for art projects — responsive grid with lightbox viewer",
+  "icon": "🖼️",
+  "license": "proprietary",
+  "category": "viewer",
+  "projectTypes": ["art"],
+  "projectCategories": ["media"],
+  "permissions": [
+    { "id": "container.run", "reason": "Serves media files via nginx container", "required": true },
+    { "id": "fs.read", "reason": "Reads project media files for gallery display", "required": true }
+  ],
+  "container": {
+    "image": "nginx:alpine",
+    "internalPort": 80,
+    "volumeMounts": [
+      "{projectPath}:/usr/share/nginx/html/media:ro,Z"
+    ]
+  },
+  "panel": {
+    "label": "Gallery",
+    "widgets": [
+      { "type": "markdown", "content": "## Gallery\n\nYour media files are served at the project's `*.ai.on` URL as a responsive gallery.\n\n### Supported formats\n- **Images:** `.jpg`, `.png`, `.gif`, `.svg`, `.webp`\n- **Videos:** `.mp4`, `.webm`\n\nAdd files to your project directory and they'll appear in the gallery automatically." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "gallery.art-assistant",
+      "label": "Art Assistant",
+      "description": "AI assistance for organizing and managing media assets",
+      "systemPrompt": "This is a media/art project. Help the user organize their images and videos. The project contains media files served via the Gallery app."
+    }
+  ],
+  "tools": [
+    { "id": "asset-count", "label": "Asset Count", "description": "Count media files", "action": "shell", "command": "find . -type f \\( -name '*.jpg' -o -name '*.png' -o -name '*.gif' -o -name '*.mp4' -o -name '*.webm' \\) | wc -l" }
+  ]
+}

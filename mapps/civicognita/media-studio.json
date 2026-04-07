@@ -1,0 +1,35 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "media-studio",
+  "name": "Media Studio",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Media production workspace — batch processing, format conversion, and metadata management for images and video",
+  "icon": "🎬",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": ["art"],
+  "projectCategories": ["media"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads media assets for processing", "required": true },
+    { "id": "fs.write", "reason": "Writes processed outputs", "required": true },
+    { "id": "workflow.shell", "reason": "Runs media processing commands (ffmpeg, imagemagick)", "required": false }
+  ],
+  "panel": {
+    "label": "Studio",
+    "widgets": [
+      { "type": "markdown", "content": "## Media Studio\n\nProduce and process media assets.\n\n- **Batch resize** images for multiple formats\n- **Format conversion** between image and video types\n- **Metadata editing** for EXIF, IPTC, and XMP\n- **Thumbnail generation** for galleries\n- **Video transcoding** with configurable presets\n\nProcessed files are saved to a `_output/` directory in your project." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "media-studio.media-assistant",
+      "label": "Media Assistant",
+      "description": "AI assistance for media production workflows",
+      "systemPrompt": "This is a media production project. Help the user process, organize, and optimize their media assets. Suggest appropriate formats, compression levels, and naming conventions."
+    }
+  ],
+  "tools": [
+    { "id": "gen-thumbnails", "label": "Generate Thumbnails", "description": "Create thumbnail versions of all images", "action": "shell", "command": "mkdir -p _output/thumbs && echo 'Thumbnail generation ready — requires imagemagick'" }
+  ]
+}

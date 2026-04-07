@@ -1,0 +1,8 @@
+{
+  "name": "aionima-mapp-marketplace",
+  "version": "0.1.0",
+  "mappSchema": "mapp/1.0",
+  "compatible": {
+    "agi": ">=0.3.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "dashboard-viewer",
+  "name": "Dashboard Viewer",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Overview dashboard for administration and ops projects — status panels, log streams, and metric widgets",
+  "icon": "📊",
+  "license": "proprietary",
+  "category": "viewer",
+  "projectTypes": [],
+  "projectCategories": ["administration", "ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads project status files and logs", "required": true }
+  ],
+  "panel": {
+    "label": "Dashboard",
+    "widgets": [
+      { "type": "markdown", "content": "## Dashboard Viewer\n\nMonitor project health, view logs, and track key metrics.\n\n- **Status panels** for service health\n- **Log streams** from project containers\n- **Metric widgets** for at-a-glance numbers\n\nConfigure widgets per project in the MApp settings." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "dashboard.ops-assistant",
+      "label": "Ops Assistant",
+      "description": "AI assistance for operations monitoring and troubleshooting",
+      "systemPrompt": "This is an administration/ops project. Help the user monitor status, troubleshoot issues, and manage infrastructure. Focus on operational concerns."
+    }
+  ],
+  "tools": [
+    { "id": "disk-usage", "label": "Disk Usage", "description": "Check project disk usage", "action": "shell", "command": "du -sh . 2>/dev/null || echo 'unknown'" }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "mind-mapper",
+  "name": "Mind Mapper",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Visual mind-mapping for writers — organize plots, characters, world-building, and story arcs",
+  "icon": "🧠",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": ["writing"],
+  "projectCategories": ["literature"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads existing project structure and notes", "required": true },
+    { "id": "fs.write", "reason": "Saves mind map files to the project", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted brainstorming and plot development", "required": false }
+  ],
+  "panel": {
+    "label": "Mind Map",
+    "widgets": [
+      { "type": "markdown", "content": "## Mind Mapper\n\nVisually organize your story elements.\n\n- **Characters:** Track relationships, arcs, and backstories\n- **Plot threads:** Map cause-and-effect chains\n- **World-building:** Organize locations, rules, and lore\n- **Story arcs:** Visualize narrative structure\n\nMind maps are saved as `.mindmap.json` files in your project." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "mind-mapper.brainstorm",
+      "label": "Brainstorm",
+      "description": "AI-assisted brainstorming for plot and character development",
+      "systemPrompt": "You are a creative writing collaborator. Help the user brainstorm plot ideas, develop characters, and build their story world. Suggest connections between story elements and identify gaps or opportunities in their narrative."
+    }
+  ],
+  "tools": [
+    { "id": "export-outline", "label": "Export Outline", "description": "Export mind map as a markdown outline", "action": "shell", "command": "find . -name '*.mindmap.json' -exec echo 'Mind map: {}' \\;" }
+  ]
+}

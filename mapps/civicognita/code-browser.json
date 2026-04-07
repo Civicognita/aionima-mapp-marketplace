@@ -1,0 +1,33 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "code-browser",
+  "name": "Code Browser",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Source code viewer for dev projects — syntax-highlighted file browser with search",
+  "icon": "💻",
+  "license": "proprietary",
+  "category": "viewer",
+  "projectTypes": [],
+  "projectCategories": ["app", "web", "monorepo"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads source files for display", "required": true }
+  ],
+  "panel": {
+    "label": "Code Browser",
+    "widgets": [
+      { "type": "markdown", "content": "## Code Browser\n\nBrowse project source code with syntax highlighting.\n\n- **File tree** navigation\n- **Syntax highlighting** for common languages\n- **Search** across all files\n- **Git blame** annotations\n\nOpen any file from the project to view it with full formatting." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "code-browser.code-assistant",
+      "label": "Code Explorer",
+      "description": "AI assistance for understanding and navigating code",
+      "systemPrompt": "This is a software project. Help the user understand, navigate, and explain the codebase. Focus on code structure, dependencies, and architecture."
+    }
+  ],
+  "tools": [
+    { "id": "line-count", "label": "Line Count", "description": "Count lines of code", "action": "shell", "command": "find . -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.py' -o -name '*.go' -o -name '*.rs' \\) | xargs wc -l 2>/dev/null | tail -1" }
+  ]
+}

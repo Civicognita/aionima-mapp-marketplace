@@ -1,0 +1,35 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "runbook-editor",
+  "name": "Runbook Editor",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Create and manage operational runbooks — step-by-step procedures, incident playbooks, and automation scripts",
+  "icon": "📓",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads existing runbooks and templates", "required": true },
+    { "id": "fs.write", "reason": "Saves new and edited runbooks", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted runbook generation from incident logs", "required": false }
+  ],
+  "panel": {
+    "label": "Runbooks",
+    "widgets": [
+      { "type": "markdown", "content": "## Runbook Editor\n\nCreate and maintain operational runbooks.\n\n- **Step-by-step procedures** with validation checkpoints\n- **Incident playbooks** linked to monitoring alerts\n- **Automation scripts** embedded within runbook steps\n- **Version history** for procedure changes\n\nRunbooks are saved as markdown files with embedded metadata." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "runbook-editor.ops-writer",
+      "label": "Runbook Writer",
+      "description": "AI assistance for drafting operational procedures",
+      "systemPrompt": "This is an ops project containing operational runbooks. Help the user create clear, step-by-step procedures for infrastructure operations. Include pre-conditions, step validation, rollback procedures, and escalation paths."
+    }
+  ],
+  "tools": [
+    { "id": "list-runbooks", "label": "List Runbooks", "description": "Show all runbooks in the project", "action": "shell", "command": "find . -name '*.md' -type f | sort" }
+  ]
+}

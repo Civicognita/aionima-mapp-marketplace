@@ -1,0 +1,56 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "ops-monitor",
+  "name": "Ops Monitor",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Operations health check tool — service status, log analysis, and resource monitoring for infrastructure projects",
+  "icon": "🛡️",
+  "license": "proprietary",
+  "category": "tool",
+  "projectTypes": [],
+  "projectCategories": ["ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads config files and logs", "required": true },
+    { "id": "workflow.shell", "reason": "Runs health check commands", "required": true }
+  ],
+  "panel": {
+    "label": "Ops Monitor",
+    "widgets": [
+      { "type": "markdown", "content": "## Ops Monitor\n\nMonitor and diagnose infrastructure health.\n\n- **Service checks** — verify running services\n- **Log analysis** — scan for errors and anomalies\n- **Resource usage** — disk, memory, CPU status\n- **Config validation** — check for misconfigurations" }
+    ]
+  },
+  "pages": [
+    {
+      "key": "check",
+      "title": "Health Check",
+      "pageType": "standard",
+      "visibility": "always",
+      "fields": [
+        {
+          "key": "check_type",
+          "cell": "A1",
+          "type": "select",
+          "label": "Check type",
+          "required": true,
+          "options": ["Full health check", "Services only", "Logs only", "Resources only"]
+        },
+        {
+          "key": "context",
+          "cell": "A2",
+          "type": "textarea",
+          "label": "Additional context",
+          "required": false,
+          "placeholder": "Any symptoms, recent changes, or specific services to check..."
+        }
+      ]
+    }
+  ],
+  "output": {
+    "processingPrompt": "You are an infrastructure operations specialist. Run a health check based on the requested type (A1) with additional context (A2).\n\nProduce a structured report:\n\n## Ops Health Report\n\n### Status\nOverall health: HEALTHY / DEGRADED / CRITICAL\n\n### Services\nList of services and their status.\n\n### Issues Found\nAny problems detected, ordered by severity.\n\n### Recommendations\nSuggested actions to resolve issues or improve reliability."
+  },
+  "tools": [
+    { "id": "service-status", "label": "Service Status", "description": "Check systemd service status", "action": "shell", "command": "systemctl list-units --type=service --state=running --no-pager | head -20" },
+    { "id": "resource-check", "label": "Resource Check", "description": "Check disk and memory usage", "action": "shell", "command": "echo '=== Disk ===' && df -h / && echo '\\n=== Memory ===' && free -h" }
+  ]
+}

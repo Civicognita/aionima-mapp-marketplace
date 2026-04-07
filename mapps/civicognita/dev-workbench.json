@@ -1,0 +1,45 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "dev-workbench",
+  "name": "Dev Workbench",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Integrated development environment for code projects — editor, terminal, and build tools",
+  "icon": "⚙️",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["app", "web", "monorepo"],
+  "permissions": [
+    { "id": "container.run", "reason": "Runs development container with project tools", "required": true },
+    { "id": "fs.read", "reason": "Reads source files for editing", "required": true },
+    { "id": "fs.write", "reason": "Writes changes back to project files", "required": true },
+    { "id": "workflow.shell", "reason": "Runs build and test commands", "required": false }
+  ],
+  "container": {
+    "image": "node:22-alpine",
+    "internalPort": 3000,
+    "volumeMounts": [
+      "{projectPath}:/workspace:rw,Z"
+    ],
+    "command": ["sh", "-c", "cd /workspace && npx serve -l 3000 -s . 2>/dev/null || sleep infinity"]
+  },
+  "panel": {
+    "label": "Workbench",
+    "widgets": [
+      { "type": "markdown", "content": "## Dev Workbench\n\nFull development environment for your project.\n\n- **File editor** with syntax highlighting\n- **Terminal** for running commands\n- **Build tools** integrated with project stack\n- **Live preview** for web projects\n\nAll changes are written directly to your project directory." }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "dev-workbench.dev-assistant",
+      "label": "Dev Assistant",
+      "description": "AI pair programming assistant",
+      "systemPrompt": "This is a software development project. Help the user write, debug, test, and refactor code. Be aware of the project's tech stack and conventions. Suggest improvements but respect existing patterns."
+    }
+  ],
+  "tools": [
+    { "id": "run-build", "label": "Build", "description": "Run project build command", "action": "shell", "command": "cd /workspace && npm run build 2>&1 || pnpm build 2>&1 || echo 'No build script found'" },
+    { "id": "run-tests", "label": "Test", "description": "Run project tests", "action": "shell", "command": "cd /workspace && npm test 2>&1 || pnpm test 2>&1 || echo 'No test script found'" }
+  ]
+}
