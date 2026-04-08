@@ -3,11 +3,12 @@
   "id": "dev-workbench",
   "name": "Dev Workbench",
   "author": "civicognita",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "IDE for code projects — file tree navigation, code editor with syntax highlighting, and build tools",
   "icon": "⚙️",
   "license": "proprietary",
   "category": "production",
+  "dockable": false,
   "projectTypes": [],
   "projectCategories": ["app", "web", "monorepo"],
   "permissions": [
