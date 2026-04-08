@@ -174,5 +174,87 @@
       ],
       "source": "./mapps/civicognita/runbook-editor.json"
     }
+  ],
+  "plugins": [
+    {
+      "id": "aionima-node-runtime",
+      "name": "Node.js Runtimes",
+      "author": "civicognita",
+      "version": "2.0.0",
+      "description": "Node.js runtime management — version selection, install/uninstall, settings",
+      "category": "runtime",
+      "provides": ["runtimes"],
+      "source": "./plugins/plugin-node-runtime"
+    },
+    {
+      "id": "aionima-php-runtime",
+      "name": "PHP Runtimes",
+      "author": "civicognita",
+      "version": "2.0.0",
+      "description": "PHP runtime management — version selection, install/uninstall, settings",
+      "category": "runtime",
+      "provides": ["runtimes"],
+      "source": "./plugins/plugin-php-runtime"
+    },
+    {
+      "id": "aionima-postgres",
+      "name": "PostgreSQL",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "PostgreSQL management — version selection, service control, database config",
+      "category": "stack",
+      "provides": ["stacks", "runtimes"],
+      "source": "./plugins/plugin-postgres"
+    },
+    {
+      "id": "plugin-python",
+      "name": "Python",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Python runtime management — version selection, install/uninstall",
+      "category": "runtime",
+      "provides": ["runtimes"],
+      "source": "./plugins/plugin-python"
+    },
+    {
+      "id": "plugin-ruby",
+      "name": "Ruby",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Ruby runtime management — version selection, install/uninstall",
+      "category": "runtime",
+      "provides": ["runtimes"],
+      "source": "./plugins/plugin-ruby"
+    },
+    {
+      "id": "plugin-go",
+      "name": "Go",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Go runtime management — version selection, install/uninstall",
+      "category": "runtime",
+      "provides": ["runtimes"],
+      "source": "./plugins/plugin-go"
+    },
+    {
+      "id": "plugin-mysql",
+      "name": "MySQL",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "MySQL/MariaDB management — version selection, service control, database config",
+      "category": "stack",
+      "provides": ["stacks", "runtimes"],
+      "source": "./plugins/plugin-mysql"
+    },
+    {
+      "id": "plugin-redis",
+      "name": "Redis",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Redis/Valkey management — version selection, service control, cache config",
+      "category": "stack",
+      "provides": ["stacks"],
+      "source": "./plugins/plugin-redis"
+    }
   ]
 }

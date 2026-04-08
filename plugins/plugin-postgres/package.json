@@ -5,7 +5,7 @@
   "author": "civicognita",
   "type": "module",
   "aionima": {
-    "id": "plugin-postgres",
+    "id": "aionima-postgres",
     "name": "PostgreSQL",
     "version": "1.0.0",
     "description": "PostgreSQL management — version selection, service control, database config",
