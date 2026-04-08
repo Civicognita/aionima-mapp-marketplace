@@ -1,0 +1,20 @@
+{
+  "name": "@aionima/plugin-php",
+  "version": "1.0.0",
+  "description": "PHP runtime management — version selection, install/uninstall",
+  "author": "civicognita",
+  "type": "module",
+  "aionima": {
+    "id": "plugin-php",
+    "name": "PHP",
+    "version": "1.0.0",
+    "description": "PHP runtime management — version selection, install/uninstall",
+    "author": "civicognita",
+    "aionimaVersion": ">=0.5.0",
+    "category": "runtime",
+    "provides": ["runtimes"],
+    "permissions": ["shell.exec", "config.read", "config.write"],
+    "entry": "./src/index.ts",
+    "bakedIn": true
+  }
+}

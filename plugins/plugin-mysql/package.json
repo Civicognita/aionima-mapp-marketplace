@@ -1,0 +1,20 @@
+{
+  "name": "@aionima/plugin-mysql",
+  "version": "1.0.0",
+  "description": "MySQL management — version selection, service control, database config",
+  "author": "civicognita",
+  "type": "module",
+  "aionima": {
+    "id": "plugin-mysql",
+    "name": "MySQL",
+    "version": "1.0.0",
+    "description": "MySQL management — version selection, service control, database config",
+    "author": "civicognita",
+    "aionimaVersion": ">=0.5.0",
+    "category": "stack",
+    "provides": ["stacks", "runtimes"],
+    "permissions": ["shell.exec", "config.read", "config.write"],
+    "entry": "./src/index.ts",
+    "bakedIn": true
+  }
+}

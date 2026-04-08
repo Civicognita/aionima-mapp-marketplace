@@ -1,0 +1,20 @@
+{
+  "name": "@aionima/plugin-redis",
+  "version": "1.0.0",
+  "description": "Redis management — version selection, service control, cache config",
+  "author": "civicognita",
+  "type": "module",
+  "aionima": {
+    "id": "plugin-redis",
+    "name": "Redis",
+    "version": "1.0.0",
+    "description": "Redis management — version selection, service control, cache config",
+    "author": "civicognita",
+    "aionimaVersion": ">=0.5.0",
+    "category": "stack",
+    "provides": ["stacks"],
+    "permissions": ["shell.exec", "config.read", "config.write"],
+    "entry": "./src/index.ts",
+    "bakedIn": true
+  }
+}
