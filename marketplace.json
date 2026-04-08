@@ -54,7 +54,7 @@
       "id": "dev-workbench",
       "name": "Dev Workbench",
       "author": "civicognita",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "IDE for code projects — file tree navigation, code editor with syntax highlighting, and build tools",
       "icon": "⚙️",
       "category": "production",
