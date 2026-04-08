@@ -3,7 +3,7 @@
   "id": "dev-workbench",
   "name": "Dev Workbench",
   "author": "civicognita",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "IDE for code projects — file tree navigation, code editor with syntax highlighting, and build tools",
   "icon": "⚙️",
   "license": "proprietary",
@@ -27,8 +27,16 @@
   "panel": {
     "label": "Workbench",
     "widgets": [
-      { "type": "tree-nav", "title": "Project Files" },
-      { "type": "code-editor", "language": "typescript", "defaultValue": "// Select a file from the project tree to start editing\n", "height": "400" }
+      {
+        "type": "layout",
+        "direction": "horizontal",
+        "sizes": ["260px", "1fr"],
+        "height": "100%",
+        "children": [
+          { "type": "tree-nav", "title": "Project Files" },
+          { "type": "code-editor", "language": "typescript", "defaultValue": "// Select a file from the project tree to start editing\n", "height": "100%" }
+        ]
+      }
     ]
   },
   "prompts": [
