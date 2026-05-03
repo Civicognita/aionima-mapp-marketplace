@@ -97,6 +97,21 @@
       "source": "./mapps/civicognita/dev-workbench.json"
     },
     {
+      "id": "expenses",
+      "name": "Expense Reports",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Capture expense reports, route for approval, export approved-not-yet-reimbursed totals. Composes with the Accounting Ledger and Budget Tracker MApps when installed.",
+      "icon": "🧾",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/expenses.json"
+    },
+    {
       "id": "gallery",
       "name": "Gallery",
       "author": "civicognita",
