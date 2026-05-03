@@ -35,6 +35,21 @@
       "source": "./mapps/civicognita/admin-editor.json"
     },
     {
+      "id": "budget-tracker",
+      "name": "Budget Tracker",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Period budgets per category, actuals-vs-budget variance, and overrun alerts. Composes with the Accounting Ledger MApp when both are installed.",
+      "icon": "📊",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/budget-tracker.json"
+    },
+    {
       "id": "code-browser",
       "name": "Code Browser",
       "author": "civicognita",
