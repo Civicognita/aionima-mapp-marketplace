@@ -1,0 +1,64 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "expenses",
+  "name": "Expense Reports",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Capture expense reports, route for approval, export approved-not-yet-reimbursed totals. Composes with the Accounting Ledger and Budget Tracker MApps when installed.",
+  "icon": "🧾",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["administration", "ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads expense reports + (optionally) the Accounting MApp's ledger to detect already-reimbursed entries", "required": true },
+    { "id": "fs.write", "reason": "Writes expense report records, status transitions, and reimbursement export files", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted category suggestion + reimbursement-period narrative", "required": false }
+  ],
+  "panel": {
+    "label": "Expense Reports",
+    "widgets": [
+      {
+        "type": "markdown",
+        "content": "## Expense Reports\n\nProject-scoped expense capture, approval routing, and reimbursement export. Stores entries in `k/mapps/expenses/`:\n\n- `reports/<report-id>.json` — one report per file (vendor, line items, total, category, status)\n- `reports/<report-id>/receipt.<ext>` — attached receipt image or PDF (manual upload for now; see *Vision-OCR roadmap* below)\n- `categories.json` — your project's expense category list (reused across reports)\n\n### Statuses\n\n`draft` → `submitted` → `approved` | `rejected` → `reimbursed`. The approval and reimbursement transitions are the two events that compose with other MApps.\n\n### Common workflows\n\n- **Capture an expense** — fill vendor + amount + date + category; attach a receipt image to `reports/<id>/`; ask the **expense categorizer** for category suggestion if you're unsure\n- **Review the queue** — list reports in `submitted` state; transition to `approved` or `rejected`\n- **Reimbursement run** — export approved-not-yet-reimbursed reports as CSV for payroll or AP processing\n\n### When the Accounting MApp is also installed\n\nApproved reports auto-post to `k/mapps/accounting/ledger.jsonl` as a debit to the matching expense account (per `categories.json` mapping) plus a credit to `Accrued Reimbursements`. Once paid (status → `reimbursed`), accounting reverses the accrual + posts the cash outflow.\n\n### When the Budget Tracker MApp is also installed\n\nThe `expenses-by-category` tool's per-period aggregates feed Budget Tracker's actuals — a category that's tracking over budget surfaces in the Overrun Flagger before the period closes.\n\n### Vision-OCR roadmap\n\nThe spec for this MApp envisions a **per-screen vision-capable mini-agent** (Moondream2 default, SmolVLM fallback per the off-grid floor) that extracts vendor + amount + suggested category from an uploaded receipt image. That capability ships when the MApp screens runtime adds per-screen agentic dispatch (currently only `componentRef` element dispatch is wired; cycle-202 Phase D end-to-end). Until then, capture is manual: upload the receipt for record-keeping, then enter fields by hand. The **expense categorizer** assist below covers the category-suggestion portion of the workflow without requiring vision."
+      }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "expenses.categorize",
+      "label": "Expense Categorizer",
+      "description": "During-workflow assist: suggest an expense category from vendor + line items, flag unusual amounts",
+      "systemPrompt": "This is the project's expense MApp. Given a vendor name + line item description + amount, suggest the best-fit expense category from the project's `k/mapps/expenses/categories.json` (or from common patterns if the file doesn't exist yet — Travel, Meals, Software, Office Supplies, Utilities, Professional Services, etc.). If the amount looks unusual for the vendor or category (e.g. a $12k 'Office Supplies' entry, a $45 'Travel — Flight' entry), flag it with a one-line reason and ask the user to confirm. If a receipt image filename is mentioned but the vision-OCR runtime isn't available yet, gently remind the user that vendor + amount fields will need to be entered manually until the screens runtime adds per-screen agentic dispatch. Keep tone professional, terse — this assist runs while the user is in capture flow."
+    },
+    {
+      "id": "expenses.reimbursement-narrative",
+      "label": "Reimbursement Summary",
+      "description": "Post-workflow narrative: monthly summary of approved-not-yet-reimbursed totals + per-category breakdown",
+      "systemPrompt": "Given a snapshot of approved-not-yet-reimbursed expense reports (with employee, total, category, days-since-approved) and the prior period's reimbursement data, write a one-paragraph summary for a project owner who isn't a finance person. Highlight the top three signals: largest pending totals by employee, oldest unreimbursed approval + how long it's been pending, and any per-category trends vs prior period (e.g. 'Travel pending tripled this month — recent off-site'). End with one concrete next-action suggestion (e.g. 'run a reimbursement batch covering the 7 reports older than 14 days')."
+    }
+  ],
+  "tools": [
+    {
+      "id": "expenses-pending",
+      "label": "Pending Approval Queue",
+      "description": "List expense reports awaiting approval, oldest first",
+      "action": "shell",
+      "command": "if [ -d k/mapps/expenses/reports ]; then jq -s 'map(select(.status == \"submitted\")) | sort_by(.submitted_at) | map({id, employee: .employee, vendor: .vendor, total: .total, category: .category, submitted: .submitted_at})' k/mapps/expenses/reports/*.json 2>/dev/null || echo 'No reports submitted yet.'; else echo 'No expense reports yet — capture your first one with the expense-categorizer assistant.'; fi"
+    },
+    {
+      "id": "expenses-by-category",
+      "label": "By Category (period)",
+      "description": "Aggregate approved expense totals per category for the current period (feeds Budget Tracker actuals when installed)",
+      "action": "shell",
+      "command": "if [ -d k/mapps/expenses/reports ]; then period=$(date +%Y-Q$((($(date +%-m)-1)/3+1))); jq -s --arg p \"$period\" 'map(select(.status == \"approved\" or .status == \"reimbursed\")) | map(select((.approved_at // \"\") | startswith($p[:4]))) | group_by(.category) | map({category: .[0].category, count: length, total: (map(.total) | add)})' k/mapps/expenses/reports/*.json 2>/dev/null || echo 'No approved reports yet.'; else echo 'No expense reports yet.'; fi"
+    },
+    {
+      "id": "expenses-reimbursement-export",
+      "label": "Reimbursement Export (CSV)",
+      "description": "Export approved-not-yet-reimbursed reports as CSV for payroll/AP processing",
+      "action": "shell",
+      "command": "if [ -d k/mapps/expenses/reports ]; then mkdir -p k/mapps/expenses/exports; out=\"k/mapps/expenses/exports/reimbursement-$(date +%Y%m%d).csv\"; { echo 'id,employee,vendor,total,category,approved_at'; jq -s -r 'map(select(.status == \"approved\")) | sort_by(.approved_at) | .[] | [.id, .employee, .vendor, .total, .category, .approved_at] | @csv' k/mapps/expenses/reports/*.json 2>/dev/null; } > \"$out\" && echo \"Wrote $out — $(wc -l < \"$out\") lines\" || echo 'No approved-not-yet-reimbursed reports to export.'; else echo 'No expense reports yet.'; fi"
+    }
+  ]
+}

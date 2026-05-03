@@ -1,0 +1,64 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "budget-tracker",
+  "name": "Budget Tracker",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Period budgets per category, actuals-vs-budget variance, and overrun alerts. Composes with the Accounting Ledger MApp when both are installed.",
+  "icon": "📊",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["administration", "ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads budgets + (optionally) the Accounting MApp's ledger to compute actuals", "required": true },
+    { "id": "fs.write", "reason": "Writes period budgets + variance snapshots", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted overrun flagging + variance narrative", "required": false }
+  ],
+  "panel": {
+    "label": "Budget Tracker",
+    "widgets": [
+      {
+        "type": "markdown",
+        "content": "## Budget Tracker\n\nPeriod-based budgeting with variance reporting. Stores entries in `k/mapps/budget-tracker/`:\n\n- `budgets.json` — your per-category targets, one block per period (e.g. `2026-Q2`)\n- `actuals.json` — manual entries when no Accounting MApp is installed\n- `variance/<period>.json` — point-in-time variance snapshots (budget vs actual per category)\n\n### When the Accounting MApp is also installed\n\nActuals are read live from `k/mapps/accounting/ledger.jsonl` — no manual entry needed. Categories use the same chart of accounts so the variance view aligns with your books.\n\n### Common workflows\n\n- **Set a period budget** — list category targets for a quarter or month\n- **Check variance mid-period** — see which categories are tracking over/under\n- **Reconcile period-end** — snapshot final variance into `variance/<period>.json` for reporting\n\nAsk the **overrun flagger** below to surface categories trending toward overrun before the period ends."
+      }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "budget-tracker.flag-overrun",
+      "label": "Overrun Flagger",
+      "description": "During-workflow assist: flag budget categories trending toward overrun based on current spend pace",
+      "systemPrompt": "This is the project's budget tracker MApp. Given the current period's budget per category + the actuals-to-date, identify categories that are trending toward overrun if the current pace continues to period-end. Project linearly unless seasonality is obvious from past periods. Output: prioritized list of at-risk categories with (a) projected end-of-period spend, (b) % over budget, (c) one suggestion for reallocation between categories or for adjusting the budget. Be terse — a project owner glances at this mid-period."
+    },
+    {
+      "id": "budget-tracker.variance-narrative",
+      "label": "Variance Narrative",
+      "description": "Post-workflow narrative: plain-language summary of period-end variance vs budget",
+      "systemPrompt": "Given a period's final variance report (per-category budget vs actual), write a one-paragraph plain-language summary for a project owner who isn't a finance person. Highlight the top three signals: largest absolute variances (over OR under), patterns across categories (e.g. 'all marketing spend was under, all infra spend was over'), and any categories that should prompt next-period budget adjustments. Tone: professional but conversational."
+    }
+  ],
+  "tools": [
+    {
+      "id": "budget-current-period",
+      "label": "Current Period Budget",
+      "description": "Show the current period's budget per category (auto-detects current period from system date)",
+      "action": "shell",
+      "command": "if [ -f k/mapps/budget-tracker/budgets.json ]; then period=$(date +%Y-Q$((($(date +%-m)-1)/3+1))); jq --arg p \"$period\" '.[$p] // \"No budget set for $p — add one with the overrun flagger assistant.\"' k/mapps/budget-tracker/budgets.json; else echo 'No budgets file yet — create k/mapps/budget-tracker/budgets.json keyed by period (e.g. 2026-Q2).'; fi"
+    },
+    {
+      "id": "budget-actuals-from-ledger",
+      "label": "Actuals From Ledger (cross-MApp)",
+      "description": "Sum debits per account from the Accounting MApp's ledger (when installed) for the current period",
+      "action": "shell",
+      "command": "if [ -f k/mapps/accounting/ledger.jsonl ]; then period=$(date +%Y-Q$((($(date +%-m)-1)/3+1))); jq -s --arg p \"$period\" 'map(select(.period == $p or (.date | startswith($p[:4])))) | group_by(.account) | map({account: .[0].account, debit: (map(.debit // 0) | add)})' k/mapps/accounting/ledger.jsonl 2>/dev/null || echo 'Ledger present but no entries for current period.'; else echo 'Accounting MApp not installed (or ledger empty). Use manual actuals in k/mapps/budget-tracker/actuals.json instead.'; fi"
+    },
+    {
+      "id": "budget-variance-snapshot",
+      "label": "Variance Snapshot",
+      "description": "Compute current variance (budget − actual) per category and write to variance/<period>.json",
+      "action": "shell",
+      "command": "if [ -f k/mapps/budget-tracker/budgets.json ]; then period=$(date +%Y-Q$((($(date +%-m)-1)/3+1))); mkdir -p k/mapps/budget-tracker/variance; budget=$(jq -r --arg p \"$period\" '.[$p] // {}' k/mapps/budget-tracker/budgets.json); actuals=$(jq -s --arg p \"$period\" 'map(select(.period == $p)) | group_by(.account) | map({account: .[0].account, actual: (map(.debit // 0) | add)}) | from_entries' k/mapps/accounting/ledger.jsonl 2>/dev/null || echo '{}'); echo \"$budget\" | jq --argjson actuals \"$actuals\" 'to_entries | map({category: .key, budget: .value, actual: ($actuals[.key].actual // 0), variance: (.value - ($actuals[.key].actual // 0))})' | tee k/mapps/budget-tracker/variance/$period.json; else echo 'No budgets file yet — set one before computing variance.'; fi"
+    }
+  ]
+}

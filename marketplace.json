@@ -1,10 +1,25 @@
 {
-  "name": "aionima-mapp-marketplace",
+  "name": "agi-mapp-marketplace",
   "owner": {
     "name": "Civicognita",
     "id": "#O0"
   },
   "mapps": [
+    {
+      "id": "accounting",
+      "name": "Accounting Ledger",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "General ledger, double-entry bookkeeping, and basic financial reports for ops + administration projects",
+      "icon": "📒",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/accounting.json"
+    },
     {
       "id": "admin-editor",
       "name": "Admin Editor",
@@ -18,6 +33,21 @@
         "administration"
       ],
       "source": "./mapps/civicognita/admin-editor.json"
+    },
+    {
+      "id": "budget-tracker",
+      "name": "Budget Tracker",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Period budgets per category, actuals-vs-budget variance, and overrun alerts. Composes with the Accounting Ledger MApp when both are installed.",
+      "icon": "📊",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/budget-tracker.json"
     },
     {
       "id": "code-browser",
@@ -67,6 +97,21 @@
       "source": "./mapps/civicognita/dev-workbench.json"
     },
     {
+      "id": "expenses",
+      "name": "Expense Reports",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Capture expense reports, route for approval, export approved-not-yet-reimbursed totals. Composes with the Accounting Ledger and Budget Tracker MApps when installed.",
+      "icon": "🧾",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/expenses.json"
+    },
+    {
       "id": "gallery",
       "name": "Gallery",
       "author": "civicognita",
@@ -81,6 +126,21 @@
         "media"
       ],
       "source": "./mapps/civicognita/gallery.json"
+    },
+    {
+      "id": "invoicing",
+      "name": "Invoicing & Receivables",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Create invoices, track unpaid + aging buckets (30/60/90), draft polite payment reminders. Composes with the Accounting Ledger MApp when both are installed.",
+      "icon": "🧾",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/invoicing.json"
     },
     {
       "id": "media-studio",
