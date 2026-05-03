@@ -113,6 +113,21 @@
       "source": "./mapps/civicognita/gallery.json"
     },
     {
+      "id": "invoicing",
+      "name": "Invoicing & Receivables",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "Create invoices, track unpaid + aging buckets (30/60/90), draft polite payment reminders. Composes with the Accounting Ledger MApp when both are installed.",
+      "icon": "🧾",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/invoicing.json"
+    },
+    {
       "id": "media-studio",
       "name": "Media Studio",
       "author": "civicognita",

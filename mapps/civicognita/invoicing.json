@@ -1,0 +1,64 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "invoicing",
+  "name": "Invoicing & Receivables",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "Create invoices, track unpaid + aging buckets (30/60/90), draft polite payment reminders. Composes with the Accounting Ledger MApp when both are installed.",
+  "icon": "🧾",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["administration", "ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads invoice records + (optionally) Accounting MApp's ledger for posted AR entries", "required": true },
+    { "id": "fs.write", "reason": "Writes invoice records + reminder drafts", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted invoice drafting + payment reminder language", "required": false }
+  ],
+  "panel": {
+    "label": "Invoicing & Receivables",
+    "widgets": [
+      {
+        "type": "markdown",
+        "content": "## Invoicing & Receivables\n\nProject-scoped invoicing with aging-bucket tracking. Stores entries in `k/mapps/invoicing/`:\n\n- `invoices/<inv-id>.json` — one invoice per file (line items, totals, terms, sent/paid status)\n- `reminders/<inv-id>-<n>.json` — drafted reminder messages, numbered by send sequence\n- `clients.json` — client registry (name, email, billing address, payment terms)\n\n### Common workflows\n\n- **Create an invoice** — draft line items, totals, payment terms; ask the assistant to format polished line descriptions\n- **Track unpaid** — list invoices past due, grouped by 0-30 / 30-60 / 60-90 / 90+ aging buckets\n- **Draft a reminder** — for an aged invoice, ask the assistant to compose a polite (escalating-by-bucket) payment reminder\n\n### When the Accounting MApp is also installed\n\nInvoice creation can post a matching AR ledger entry to `k/mapps/accounting/ledger.jsonl` so the books reflect outstanding receivables in real time. Reconciliation works in both directions: payment recorded in accounting can mark the invoice paid; invoice paid in invoicing can post the cash receipt to accounting.\n\nAsk the **invoice creator** below for line-item polish or the **collections summary** drafter for monthly reports."
+      }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "invoicing.draft-invoice",
+      "label": "Invoice Creator",
+      "description": "During-workflow assist: polishes line item descriptions, suggests terms, computes totals + tax",
+      "systemPrompt": "This is the project's invoicing MApp. Help the user draft an invoice — refine vague line item descriptions into client-ready language, suggest standard payment terms (Net 15, Net 30, etc.) appropriate to the relationship, compute subtotal + tax + total when given the rate, and flag anything missing from a complete invoice (PO number, description detail, billing address). Keep tone professional. When asked, also draft the polite payment reminder for an invoice past due — tone scales with the aging bucket: warm + curious for 30d, professional + firm for 60d, escalation-language for 90d+."
+    },
+    {
+      "id": "invoicing.collections-narrative",
+      "label": "Collections Summary",
+      "description": "Post-workflow narrative: monthly summary of receivables status, top outstanding clients, collection trends",
+      "systemPrompt": "Given a snapshot of outstanding invoices (with client, amount, days outstanding) and the prior period's collections data, write a one-paragraph summary for a project owner who isn't a finance person. Highlight the top three signals: largest outstanding balances by client, oldest unpaid invoice + how long it's been outstanding, and any aging-bucket shifts vs prior period (e.g. '3 invoices moved from 30-60 to 60-90 this month — collection effort needed'). End with one concrete next-action suggestion (e.g. 'send reminders to the 5 clients in 60-90 bucket')."
+    }
+  ],
+  "tools": [
+    {
+      "id": "invoice-list",
+      "label": "Recent Invoices",
+      "description": "List the last 20 invoices with status + amount",
+      "action": "shell",
+      "command": "if [ -d k/mapps/invoicing/invoices ]; then ls -t k/mapps/invoicing/invoices/*.json 2>/dev/null | head -20 | xargs -I {} jq -c '{id, client: .client.name, amount: .total, status, due: .due_date}' {} 2>/dev/null; else echo 'No invoices yet — draft your first one with the invoice-creator assistant.'; fi"
+    },
+    {
+      "id": "aging-buckets",
+      "label": "Aging Buckets",
+      "description": "Group unpaid invoices into 0-30 / 30-60 / 60-90 / 90+ days outstanding",
+      "action": "shell",
+      "command": "if [ -d k/mapps/invoicing/invoices ]; then today=$(date +%s); jq -s --argjson today \"$today\" 'map(select(.status != \"paid\")) | map({id, client: .client.name, amount: .total, days_outstanding: ((($today - (.due_date | strptime(\"%Y-%m-%d\") | mktime)) / 86400) | floor)}) | group_by(if .days_outstanding < 0 then \"upcoming\" elif .days_outstanding < 30 then \"0-30\" elif .days_outstanding < 60 then \"30-60\" elif .days_outstanding < 90 then \"60-90\" else \"90+\" end) | map({bucket: .[0] | (if .days_outstanding < 0 then \"upcoming\" elif .days_outstanding < 30 then \"0-30\" elif .days_outstanding < 60 then \"30-60\" elif .days_outstanding < 90 then \"60-90\" else \"90+\" end), count: length, total: (map(.amount) | add)})' k/mapps/invoicing/invoices/*.json 2>/dev/null; else echo 'No invoices yet.'; fi"
+    },
+    {
+      "id": "ar-total",
+      "label": "Total Outstanding (AR)",
+      "description": "Sum unpaid invoice amounts across all clients",
+      "action": "shell",
+      "command": "if [ -d k/mapps/invoicing/invoices ]; then jq -s 'map(select(.status != \"paid\")) | {count: length, total: (map(.total) | add), oldest: (sort_by(.due_date) | first | {id, client: .client.name, due: .due_date})}' k/mapps/invoicing/invoices/*.json 2>/dev/null || echo 'No invoices yet.'; else echo 'No invoices yet.'; fi"
+    }
+  ]
+}
