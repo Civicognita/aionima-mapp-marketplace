@@ -1,0 +1,64 @@
+{
+  "$schema": "mapp/1.0",
+  "id": "accounting",
+  "name": "Accounting Ledger",
+  "author": "civicognita",
+  "version": "1.0.0",
+  "description": "General ledger, double-entry bookkeeping, and basic financial reports for ops + administration projects",
+  "icon": "📒",
+  "license": "proprietary",
+  "category": "production",
+  "projectTypes": [],
+  "projectCategories": ["administration", "ops"],
+  "permissions": [
+    { "id": "fs.read", "reason": "Reads ledger entries from k/mapps/accounting/", "required": true },
+    { "id": "fs.write", "reason": "Writes journal entries + chart of accounts", "required": true },
+    { "id": "agent.prompt", "reason": "AI-assisted transaction categorization + report drafting", "required": false }
+  ],
+  "panel": {
+    "label": "Accounting Ledger",
+    "widgets": [
+      {
+        "type": "markdown",
+        "content": "## Accounting Ledger\n\nDouble-entry bookkeeping for the project. Stores entries in `k/mapps/accounting/`:\n\n- `chart-of-accounts.json` — your account hierarchy (Assets, Liabilities, Equity, Revenue, Expenses)\n- `ledger.jsonl` — append-only journal entries (one per line)\n- `periods/<yyyy-mm>.json` — period close snapshots\n\n### Common workflows\n\n- **Add an account** — extend the chart of accounts with a new code + name\n- **Post a transaction** — record a debit + matching credit (always balanced)\n- **Run a report** — balance sheet (point-in-time) or income statement (period)\n\nAsk the **categorization assistant** below to suggest accounts when posting a transaction."
+      }
+    ]
+  },
+  "prompts": [
+    {
+      "id": "accounting.categorize",
+      "label": "Transaction Categorizer",
+      "description": "Suggests chart-of-account codes for new transactions based on payee + memo + amount",
+      "systemPrompt": "This is the project's accounting ledger MApp. When the user describes a transaction (payee, amount, memo, date), suggest the most appropriate debit + credit accounts from their chart of accounts. Always propose a balanced entry (debits = credits). If the chart of accounts is empty or missing the right category, suggest a new account code following the standard hierarchy (1xxx Assets, 2xxx Liabilities, 3xxx Equity, 4xxx Revenue, 5xxx Expenses, 6xxx Other). Be concise: one short paragraph + the proposed JE in tabular form."
+    },
+    {
+      "id": "accounting.report-narrative",
+      "label": "Financial Report Narrative",
+      "description": "Drafts a one-paragraph plain-language summary of a balance sheet or income statement",
+      "systemPrompt": "Given a balance sheet or income statement (JSON or table format), write a one-paragraph plain-language summary highlighting the top three signals: largest balances, biggest changes vs prior period if available, and any unusual line items. Tone: professional but accessible to a non-accountant project owner."
+    }
+  ],
+  "tools": [
+    {
+      "id": "ledger-tail",
+      "label": "Recent Journal Entries",
+      "description": "Show the last 20 entries in the ledger",
+      "action": "shell",
+      "command": "tail -n 20 k/mapps/accounting/ledger.jsonl 2>/dev/null | jq -c '.' || echo 'No ledger entries yet — post your first transaction.'"
+    },
+    {
+      "id": "chart-of-accounts",
+      "label": "Chart of Accounts",
+      "description": "Print the current chart of accounts",
+      "action": "shell",
+      "command": "cat k/mapps/accounting/chart-of-accounts.json 2>/dev/null | jq '.' || echo 'No chart of accounts yet — create one with the categorization assistant.'"
+    },
+    {
+      "id": "trial-balance",
+      "label": "Trial Balance",
+      "description": "Sum debits and credits across all accounts (balanced ledger sums to zero)",
+      "action": "shell",
+      "command": "if [ -f k/mapps/accounting/ledger.jsonl ]; then jq -s 'group_by(.account) | map({account: .[0].account, debit: (map(.debit // 0) | add), credit: (map(.credit // 0) | add)})' k/mapps/accounting/ledger.jsonl; else echo 'No ledger yet.'; fi"
+    }
+  ]
+}

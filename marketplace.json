@@ -6,6 +6,21 @@
   },
   "mapps": [
     {
+      "id": "accounting",
+      "name": "Accounting Ledger",
+      "author": "civicognita",
+      "version": "1.0.0",
+      "description": "General ledger, double-entry bookkeeping, and basic financial reports for ops + administration projects",
+      "icon": "📒",
+      "category": "production",
+      "projectTypes": [],
+      "projectCategories": [
+        "administration",
+        "ops"
+      ],
+      "source": "./mapps/civicognita/accounting.json"
+    },
+    {
       "id": "admin-editor",
       "name": "Admin Editor",
       "author": "civicognita",
